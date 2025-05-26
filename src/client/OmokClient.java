@@ -48,7 +48,9 @@ public class OmokClient {
         try {
             String msg;
             while ((msg = in.readLine()) != null) {
-                if (msg.equals("WIN")) {
+                if (msg.equals("READY")) {
+                    boardPanel.setReady();
+                } else if (msg.equals("WIN")) {
                     JOptionPane.showMessageDialog(null, "You Win!");
                     System.exit(0);
                 } else if (msg.equals("LOSE")) {

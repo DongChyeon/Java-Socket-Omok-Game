@@ -12,14 +12,17 @@ import java.awt.event.MouseEvent;
 public class OmokBoardPanel extends JPanel {
     private final int[][] board = new int[OmokConstants.BOARD_SIZE][OmokConstants.BOARD_SIZE];
     private boolean myTurn = false;
+    private final int myColor;
     private final int padding = OmokConstants.CELL_SIZE;
     private final JLabel statusLabel;
 
     public OmokBoardPanel(OmokClient client, int myColor) {
         setLayout(new BorderLayout());
 
+        this.myColor = myColor;
+
         // 상단 상태 표시
-        statusLabel = new JLabel("당신은 " + (myColor == OmokConstants.BLACK ? "흑(●)" : "백(○)") + " 입니다.");
+        statusLabel = new JLabel("상대 플레이어를 기다리는 중입니다...");
         statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
         statusLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
 
@@ -74,12 +77,24 @@ public class OmokBoardPanel extends JPanel {
         });
     }
 
+    public void setReady() {
+        SwingUtilities.invokeLater(() -> {
+            statusLabel.setText("당신은 " + (myColor == OmokConstants.BLACK ? "흑(●)" : "백(○)") + " 입니다.");
+            if (myColor == OmokConstants.BLACK) {
+                myTurn = true;
+            }
+        });
+    }
+
     private void showStatusMessage(String message) {
-        String originalText = statusLabel.getText();
-        statusLabel.setText(message);
-        Timer timer = new Timer(1000, e -> statusLabel.setText(originalText));
-        timer.setRepeats(false);
-        timer.start();
+        SwingUtilities.invokeLater(() -> {
+            String originalText = statusLabel.getText();
+            statusLabel.setText(message);
+
+            Timer timer = new Timer(1000, e -> statusLabel.setText(originalText));
+            timer.setRepeats(false);
+            timer.start();
+        });
     }
 
     private JPanel getBoardPanel() {

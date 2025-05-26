@@ -30,6 +30,9 @@ public class OmokServer {
             in2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
             out2.println("2"); // 백
 
+            out1.println("READY");
+            out2.println("READY");
+
             BufferedReader finalIn1 = in1;
             PrintWriter finalOut2 = out2;
             Thread t1 = new Thread(() -> relay(finalIn1, finalOut2));
