@@ -1,5 +1,8 @@
 package server;
 
+import model.Message;
+import model.OmokConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,16 +25,16 @@ public class OmokServer {
             System.out.println("✅ Player 1 connected.");
             out1 = new PrintWriter(p1.getOutputStream(), true);
             in1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
-            out1.println("1"); // 흑
+            out1.println(OmokConstants.BLACK);
 
             p2 = server.accept();
             System.out.println("✅ Player 2 connected.");
             out2 = new PrintWriter(p2.getOutputStream(), true);
             in2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-            out2.println("2"); // 백
+            out2.println(OmokConstants.WHITE);
 
-            out1.println("READY");
-            out2.println("READY");
+            out1.println(Message.READY);
+            out2.println(Message.READY);
 
             BufferedReader finalIn1 = in1;
             PrintWriter finalOut2 = out2;

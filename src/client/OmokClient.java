@@ -1,5 +1,6 @@
 package client;
 
+import model.Message;
 import ui.OmokBoardPanel;
 
 import javax.swing.*;
@@ -19,11 +20,11 @@ public class OmokClient {
         }
     }
 
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-    private OmokBoardPanel boardPanel;
-    private int myColor;
+    private final Socket socket;
+    private final BufferedReader in;
+    private final PrintWriter out;
+    private final OmokBoardPanel boardPanel;
+    private final int myColor;
 
     public OmokClient(String host) throws Exception {
         System.out.println("🚀 클라이언트: 서버에 연결 시도 중...");
@@ -48,20 +49,18 @@ public class OmokClient {
         try {
             String msg;
             while ((msg = in.readLine()) != null) {
-                if (msg.equals("READY")) {
+                if (msg.equals(Message.READY)) {
                     boardPanel.setReady();
-                } else if (msg.equals("WIN")) {
+                } else if (msg.equals(Message.WIN)) {
                     JOptionPane.showMessageDialog(null, "You Win!");
                     System.exit(0);
-                } else if (msg.equals("LOSE")) {
+                } else if (msg.equals(Message.LOSE)) {
                     JOptionPane.showMessageDialog(null, "You Lose!");
                     System.exit(0);
-                } else {
-                    String[] parts = msg.split(",");
-                    int x = Integer.parseInt(parts[0]);
-                    int y = Integer.parseInt(parts[1]);
+                } else if (Message.isMove(msg)) {
+                    int[] pos = Message.parseMove(msg);
                     int opponentColor = (myColor == 1) ? 2 : 1;
-                    boardPanel.applyOpponentMove(x, y, opponentColor);
+                    boardPanel.applyOpponentMove(pos[0], pos[1], opponentColor);
                 }
             }
         } catch (IOException e) {
@@ -70,6 +69,6 @@ public class OmokClient {
     }
 
     public void sendMove(int x, int y) {
-        out.println(x + "," + y);
+        out.println(Message.move(x, y));
     }
 }
