@@ -51,10 +51,12 @@ public class OmokClient {
                 if (msg.equals(Message.READY)) {
                     boardPanel.setReady();
                 } else if (msg.equals(Message.WIN)) {
-                    JOptionPane.showMessageDialog(null, "You Win!");
+                    String winner = (myColor == 1) ? "흑돌 승!" : "백돌 승!";
+                    JOptionPane.showMessageDialog(null, winner);
                     System.exit(0);
                 } else if (msg.equals(Message.LOSE)) {
-                    JOptionPane.showMessageDialog(null, "You Lose!");
+                    String winner = (myColor == 1) ? "백돌 승!" : "흑돌 승!";
+                    JOptionPane.showMessageDialog(null, winner);
                     System.exit(0);
                 } else if (Message.isMove(msg)) {
                     int[] pos = Message.parseMove(msg);
