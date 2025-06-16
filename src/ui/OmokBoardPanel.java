@@ -64,10 +64,8 @@ public class OmokBoardPanel extends JPanel {
 
                 if (board[y][x] != 0) return;
 
-                board[y][x] = myColor;
-                boardPanel.repaint();
+                client.sendMove(x, y, myColor);
                 myTurn = false;
-                client.sendMove(x, y);
 
                 if (OmokGameLogic.checkWin(board, x, y, myColor)) {
                     JOptionPane.showMessageDialog(null, "You Win!");
@@ -90,8 +88,12 @@ public class OmokBoardPanel extends JPanel {
         SwingUtilities.invokeLater(() -> {
             String originalText = statusLabel.getText();
             statusLabel.setText(message);
+            statusLabel.repaint();
 
-            Timer timer = new Timer(1000, e -> statusLabel.setText(originalText));
+            Timer timer = new Timer(1000, e -> {
+                statusLabel.setText(originalText);
+                statusLabel.repaint();
+            });
             timer.setRepeats(false);
             timer.start();
         });

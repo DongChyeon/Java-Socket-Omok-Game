@@ -11,24 +11,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class OmokClient {
-    public static void main(String[] args) {
-        System.out.println("🔥 OmokClient 직접 실행됨!");
-        try {
-            new OmokClient("localhost");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private final Socket socket;
-    private final BufferedReader in;
-    private final PrintWriter out;
-    private final OmokBoardPanel boardPanel;
-    private final int myColor;
-
     public OmokClient(String host) throws Exception {
         System.out.println("🚀 클라이언트: 서버에 연결 시도 중...");
-        socket = new Socket(host, 12345);
+        Socket socket = new Socket(host, 12345);
         System.out.println("✅ 클라이언트: 서버에 연결 성공!");
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
@@ -45,6 +30,20 @@ public class OmokClient {
         new Thread(this::listen).start();
     }
 
+    private final BufferedReader in;
+    private final PrintWriter out;
+    private final OmokBoardPanel boardPanel;
+    private final int myColor;
+
+    public static void main(String[] args) {
+        System.out.println("🔥 OmokClient 직접 실행됨!");
+        try {
+            new OmokClient("localhost");
+        } catch(Exception e) {
+            System.err.println("❗ 클라이언트 실행 중 오류 발생: " + e.getMessage());
+        }
+    }
+
     private void listen() {
         try {
             String msg;
@@ -59,16 +58,16 @@ public class OmokClient {
                     System.exit(0);
                 } else if (Message.isMove(msg)) {
                     int[] pos = Message.parseMove(msg);
-                    int opponentColor = (myColor == 1) ? 2 : 1;
-                    boardPanel.applyOpponentMove(pos[0], pos[1], opponentColor);
+                    int x = pos[0]; int y = pos[1]; int color = pos[2];
+                    boardPanel.applyOpponentMove(x, y, color);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("❗ 클라이언트 수신 오류: " + e.getMessage());
         }
     }
 
-    public void sendMove(int x, int y) {
-        out.println(Message.move(x, y));
+    public void sendMove(int x, int y, int color) {
+        out.println(Message.move(x, y, color));
     }
 }
