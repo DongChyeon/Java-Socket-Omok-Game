@@ -41,7 +41,12 @@ public class GameSession implements Runnable {
 
                 if (Message.isMove(msg)) {
                     int[] pos = Message.parseMove(msg);
-                    int x = pos[0], y = pos[1];
+                    int x = pos[0], y = pos[1], color = pos[2];
+
+                    if (color != currentTurn) {
+                        currentOut.println("❌ Invalid move: it's not your turn.");
+                        continue;
+                    }
 
                     if (board[y][x] != OmokConstants.EMPTY) {
                         currentOut.println("❌ Invalid move: cell occupied.");

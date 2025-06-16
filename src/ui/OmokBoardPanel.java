@@ -1,7 +1,6 @@
 package ui;
 
 import client.OmokClient;
-import logic.OmokGameLogic;
 import model.OmokConstants;
 
 import javax.swing.*;
@@ -66,11 +65,6 @@ public class OmokBoardPanel extends JPanel {
 
                 client.sendMove(x, y, myColor);
                 myTurn = false;
-
-                if (OmokGameLogic.checkWin(board, x, y, myColor)) {
-                    JOptionPane.showMessageDialog(null, "You Win!");
-                    System.exit(0);
-                }
             }
         });
     }
@@ -137,11 +131,6 @@ public class OmokBoardPanel extends JPanel {
     public void applyOpponentMove(int x, int y, int color) {
         board[y][x] = color;
         repaint();
-        myTurn = true;
-
-        if (OmokGameLogic.checkWin(board, x, y, color)) {
-            JOptionPane.showMessageDialog(null, "You Lose!");
-            System.exit(0);
-        }
+        myTurn = (color != myColor);
     }
 }
