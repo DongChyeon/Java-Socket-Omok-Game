@@ -61,7 +61,10 @@ public class OmokBoardPanel extends JPanel {
                 double distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance > 30) return;  // ← 반경 20px 이내에서만 착수 허용
 
-                if (board[y][x] != 0) return;
+                if (board[y][x] != 0) {
+                    showStatusMessage("이미 돌이 놓인 자리입니다.");
+                    return;
+                }
 
                 client.sendMove(x, y, myColor);
                 myTurn = false;
